@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Job } from '../types/Job';
 
 const JobPostForm: React.FC = () => {
   const [newJobTitle, setNewJobTitle] = useState<string>('');
