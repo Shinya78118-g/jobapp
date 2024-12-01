@@ -38,7 +38,7 @@ export default function JobListPage() {
     if (storedJobs.length > 0) {
       setJobs([...initialJobs, ...storedJobs]); // 初期データと保存されたデータを結合
     }
-  }, [initialJobs]);
+  }, []);
 
   const filteredJobs = jobs.filter((job) => {
     return (
