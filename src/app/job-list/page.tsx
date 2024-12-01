@@ -1,6 +1,6 @@
 "use client";
-import React, { useState } from 'react';
-import { Job } from './types/Job';
+import React, { useEffect, useState } from 'react';
+import { Job } from '../types/Job';
 
 const jobCategories = [
   'エンジニア',
@@ -14,7 +14,8 @@ const jobCategories = [
 ];
 
 export default function JobListPage() {
-  const [jobs] = useState<Job[]>([
+  // 初期求人データ
+  const initialJobs: Job[] = [
     { id: 1, title: '経験者歓迎！大手企業でのWebエンジニア募集', category: 'エンジニア', salary: 600 },
     { id: 2, title: '未経験OK！営業アシスタント急募', category: '営業', salary: 350 },
     { id: 3, title: 'グローバル企業でのマーケティングマネージャー', category: 'マーケティング', salary: 800 },
@@ -25,10 +26,19 @@ export default function JobListPage() {
     { id: 8, title: '外資系企業でのカスタマーサポート担当募集', category: 'カスタマーサポート', salary: 400 },
     { id: 9, title: '看護師募集！大学病院での勤務', category: '医療・介護', salary: 550 },
     { id: 10, title: '一般事務スタッフ募集！週3日からOK', category: '事務', salary: 300 },
-  ]);
+  ];
 
+  const [jobs, setJobs] = useState<Job[]>(initialJobs);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [minSalary, setMinSalary] = useState<number | ''>('');
+
+  useEffect(() => {
+    // sessionStorage から求人情報を読み込む
+    const storedJobs = JSON.parse(sessionStorage.getItem('jobs') || '[]');
+    if (storedJobs.length > 0) {
+      setJobs([...initialJobs, ...storedJobs]); // 初期データと保存されたデータを結合
+    }
+  }, []);
 
   const filteredJobs = jobs.filter((job) => {
     return (
@@ -38,18 +48,10 @@ export default function JobListPage() {
   });
 
   return (
-    <div className="container mx-auto p-4">
-      <header className="flex justify-between items-center mb-6 p-4 bg-gray-800 text-white">
-        <h1 className="text-2xl font-bold">求人検索アプリ</h1>
-        <nav>
-          <a href="/job-list" className="mr-4 text-white">求人検索</a>
-          <a href="/components/JobPostForm" className="text-white">求人投稿</a>
-        </nav>
-      </header>
-
+    <div className="container mx-auto p-1">
       <div className="grid grid-cols-4 gap-4">
-        <aside className="col-span-1 p-4 border-r border-gray-300">
-          <h2 className="font-bold mb-4">求人カテゴリ</h2>
+        <aside className="col-span-1 p-1 border-r border-gray-300">
+          <h2 className="font-bold mb-2">求人カテゴリ</h2>
           <ul>
             {jobCategories.map((category) => (
               <li key={category} className="mb-2">
@@ -96,13 +98,6 @@ export default function JobListPage() {
               </li>
             ))}
           </ul>
-          <div className="flex justify-center mt-4">
-            <button className="px-4 py-2 mx-1 border rounded">1</button>
-            <button className="px-4 py-2 mx-1 border rounded">2</button>
-            <button className="px-4 py-2 mx-1 border rounded">3</button>
-            <button className="px-4 py-2 mx-1 border rounded">4</button>
-            <button className="px-4 py-2 mx-1 border rounded">5</button>
-          </div>
         </main>
       </div>
     </div>
